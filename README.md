@@ -2,7 +2,7 @@
 
 [odoh-client-rs] is a CLI Rust client that can be used to access resolvers running the [Oblivious DNS over HTTPS (ODoH) protocol draft-06]. It is built using the [odoh-rs] library. It is mainly intended for testing as it can only send one request at a time. 
 
-[odoh-client-rs]: https://github.com/cloudflare/odoh-client-rs/
+[odoh-client-rs]: https://github.com/lkekana/odoh-client-rs/
 [Oblivious DNS over HTTPS (ODoH) protocol draft-06]: https://tools.ietf.org/html/draft-pauly-dprive-oblivious-doh-06
 [odoh-rs]: https://github.com/cloudflare/odoh-rs/
 
