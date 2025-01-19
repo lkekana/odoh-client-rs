@@ -38,7 +38,7 @@ pub fn parse_dns_answer(msg: &[u8]) -> Result<()> {
     // let result = Message::from_vec(msg)?;
     let base64_msg = STANDARD.encode(msg);
     // println!("Response: {:?}", result.answers());
-    println!("Base64 Encoded Message: {}", base64_msg);
+    println!("{}", base64_msg);
     Ok(())
 }
 
