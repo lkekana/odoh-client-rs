@@ -136,6 +136,18 @@ async fn main() -> Result<()> {
         .author(PKG_AUTHORS)
         .about(PKG_DESCRIPTION)
         .arg(
+            Arg::with_name("domain")
+                .help("Domain to query")
+                .required(true)
+                .index(1), // positional argument, must be './odoh-client <domain> ...'
+        )
+        .arg(
+            Arg::with_name("type")
+                .help("Query type")
+                .default_value("A")
+                .index(2), // positional argument, must be './odoh-client <domain> <type>'
+        )
+        .arg(
             Arg::with_name("config_file")
                 .short("c")
                 .long("config")
@@ -144,23 +156,34 @@ async fn main() -> Result<()> {
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("domain")
-                .help("Domain to query")
-                .required(true)
-                .index(1),
+            Arg::with_name("target")
+                .short("t")
+                .long("target")
+                .value_name("URL")
+                .help("Target URL for the ODoH server")
+                .takes_value(true),
         )
         .arg(
-            Arg::with_name("type")
-                .help("Query type")
-                .required(true)
-                .index(2),
+            Arg::with_name("proxy")
+                .short("p")
+                .long("proxy")
+                .value_name("URL")
+                .help("Proxy URL for the ODoH server")
+                .takes_value(true),
         )
         .get_matches();
 
     let config_file = matches
         .value_of("config_file")
         .unwrap_or("tests/config.toml");
-    let config = Config::from_path(config_file)?;
+    let mut config = Config::from_path(config_file)?;
+    // if target and proxy are specified in the command line, override the config file
+    if let Some(target) = matches.value_of("target") {
+        config.server.target = target.to_string();
+    }
+    if let Some(proxy) = matches.value_of("proxy") {
+        config.server.proxy = Some(proxy.to_string());
+    }
     let domain = matches.value_of("domain").unwrap();
     let qtype = matches.value_of("type").unwrap();
     let mut session = ClientSession::new(config.clone()).await?;
