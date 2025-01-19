@@ -174,9 +174,13 @@ async fn main() -> Result<()> {
         .get_matches();
 
     let config_file = matches
-        .value_of("config_file")
-        .unwrap_or("config.toml");
-    let mut config = Config::from_path(config_file)?;
+        .value_of("config_file");
+    let mut config;
+    if config_file.is_none() {
+        config = Config::new();
+    } else {
+        config = Config::from_path(config_file.unwrap())?;
+    }
     // if target and proxy are specified in the command line, override the config file
     if let Some(target) = matches.value_of("target") {
         config.server.target = target.to_string();
