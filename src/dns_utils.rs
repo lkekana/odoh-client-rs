@@ -4,6 +4,7 @@ use regex::Regex;
 use std::str::FromStr;
 use trust_dns_client::rr::{DNSClass, Name, RecordType};
 use trust_dns_proto::op::{message::Message, query::Query};
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 
 /// Matches "TYPExxx..", where x is a number, returns xxx... parsed as u16
 /// Example: "TYPE45" returns 45
@@ -32,10 +33,12 @@ pub fn create_dns_query(domain: &str, query_type: &str) -> Result<Vec<u8>> {
     Ok(msg_as_bytes)
 }
 
-/// Parses a DNS answer from bytes and prints it
+/// Parses a DNS answer from bytes, converts it to a base64 string, and prints it
 pub fn parse_dns_answer(msg: &[u8]) -> Result<()> {
-    let result = Message::from_vec(msg)?;
-    println!("Response: {:?}", result.answers());
+    // let result = Message::from_vec(msg)?;
+    let base64_msg = STANDARD.encode(msg);
+    // println!("Response: {:?}", result.answers());
+    println!("Base64 Encoded Message: {}", base64_msg);
     Ok(())
 }
 
